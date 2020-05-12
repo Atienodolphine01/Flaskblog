@@ -37,3 +37,29 @@
         </div>
       </div>
 {% endblock content %}
+
+{% block comments %}
+<h3 class="text-center">Comments</h3>
+<hr>
+{% if comments %}
+{% for comment in comments %}
+    <div class="border rounded m-1 px-1 small font-italic">
+       <span class="text-info">{{comment.user.username}}</span>- {{comment.comment}}
+    </div>  
+{% endfor %}
+{% else %}
+<p class="text-center">No Comments...</Ep>
+{% endif %}
+<hr>
+{% if current_user.is_authenticated %}
+<form action="" class="sticky-bottom btn-group" method="POST">
+  {{comment_form.csrf_key}}
+  {{comment_form.comment(class='form-control-sm form-control',placeholder='comment...')}}
+  {{comment_form.submit(class='btn btn-sm btn-success')}}
+</form>
+{% else %}
+<p class="primary">
+  <a href="{{url_for('users.login')}}" class="card-link">Login to add a comment</a>
+</p>
+{% endif %}
+{% endblock %}

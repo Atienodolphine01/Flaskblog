@@ -1,6 +1,7 @@
 from flask import render_template, request, Blueprint
 from flaskblog.models import Post
-
+from . import main
+from ..request import get_quote
 
 @main.route("/")
 @main.route("/home")
@@ -12,4 +13,5 @@ def home():
 
 @main.route("/about")
 def about():
-    return render_template('about.html', title='About')
+    quote= get_quote()
+    return render_template('about.html', title='About',quote=quote)

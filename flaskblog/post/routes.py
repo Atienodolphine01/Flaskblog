@@ -2,8 +2,8 @@ from flask import (render_template, url_for, flash,
                    redirect, request, abort, Blueprint)
 from flask_login import current_user, login_required
 from flaskblog import db
-from flaskblog.models import Post
-from flaskblog.posts.forms import PostForm
+from flaskblog.models import Post,Comment
+from flaskblog.post.forms import PostForm,CommentForm
 
 posts = Blueprint('posts', __name__)
 
@@ -18,14 +18,25 @@ def new_post():
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('main.home'))
-    return render_template('create_post.html', title='New Post',
-                           form=form, legend='New Post')
+    return render_template('create_post.html', title='New Post',form=form, legend='New Post')
 
 
-@posts.route("/post/<int:post_id>")
+@posts.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
+    comment_form = CommentForm()
+    if comment_form.is_submitted():
+        comment_data =comment_form.comment.data
+        user_id = current_user.id
+
+        comment = Comment(user_id=user_id, post_id=post_id,comment=comment_data)
+        db.session.add(comment)
+        db.session.commit()
+
+    comments = Comment.query.filter_by(post_id=post_id)   
+    return render_template('post.html', title=post.title, post=post, comment_form=comment_form,comments = comments)
+
+        
 
 
 @posts.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -58,3 +69,4 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('main.home'))
+

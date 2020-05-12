@@ -1,4 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
-        <h1>About Page</h1>
+<h1>About Page</h1>
+<hr>
+<div class="card bg-light">
+        <div class="card-body">
+                <div class="h3 card-title">
+                        QUOTE
+                </div>
+                <hr>
+                <div class="card-subtitle h4">
+                        {{quote.quote}}
+                </div>
+                <hr>
+                <div class="card-text">
+                        <span class="text-info">Author: {{quote.author}}</span>
+                        <a href="{{quote.permalink}}" target="_blank" class="card-link btn btn-sm btn-outline-primary float-right">
+                                View
+                        </a>
+                </div>
+        </div>
+</div>
 {% endblock content %}
